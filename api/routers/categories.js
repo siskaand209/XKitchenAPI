@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-//User Model
-const User = require('../models/user');
+//Table Model
+const Category = require('../models/category');
 
 router.get('/', (req,res, next) => {
-    User.find()
+    Category.find()
         .exec()
         .then(result => {
             res.status(200).json(result);
@@ -20,16 +20,14 @@ router.get('/', (req,res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const newUser = new User({
+    const newCategory = new Category({
     _id : new mongoose.Types.ObjectId(),
-    userId: req.body.userId,
-    password :req.body.password,
-    badgeId : req.body.badgeId,
-    nick : req.body.nick,
-    fullName :req.body.fullName
+    code: req.body.code,
+    initial :req.body.initial,
+    name : req.body.name
     });
 
-    newUser.save()
+    newCategory.save()
         .then(doc => {
             console.log(doc);
             res.status(201).json(doc);
@@ -40,16 +38,13 @@ router.post('/', (req, res, next) => {
                 error : err
             });
         })
-
-
 });
 
-module.exports = router;
 
 //Get by (id)
 router.get('/:id', (req,res, next) => {
     const id = req.params.id;
-    User.findById(id)
+    Category.findById(id)
     .exec()
     .then(result  =>{
         console.log(result);
@@ -67,28 +62,28 @@ router.get('/:id', (req,res, next) => {
 router.patch('/:id', (req, res, next) => {
     const id = req.params.id;
     const updateOps = {};
-
+    
     for(const ops of req.body){
         updateOps[ops.propName] = ops.value;
     }
-
-    User.update({_id : id}, {$set: updateOps})
-        .exec()
-        .then( result => {
-            res.status(200).json(result);
+    
+    Category.update({_id : id}, {$set: updateOps})
+    .exec()
+    .then( result => {
+        res.status(200).json(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            message : err
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                message : err
-            })
-        })
+    })
 });
 
 
 router.delete('/:id', (req,res, next) => {
     const id = req.params.id;
-    User.remove({ _id : id})
+    Category.remove({ _id : id})
     .exec()
     .then( result => {
         res.status(200).json(result);
