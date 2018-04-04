@@ -61,9 +61,6 @@ router.get('/:id', (req,res, next) => {
 //Update 
 router.patch('/:id', (req, res, next) => {
     const id = req.params.id;
-    
-    
-    
     Category.update({_id : id}, {$set: req.body})
     .exec()
     .then( result => {
