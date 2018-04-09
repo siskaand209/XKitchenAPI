@@ -10,7 +10,7 @@ const Table = require('../models/table');
 router.get('/', (req, res, next) => {
     Reservation.find()
         .populate('table', 'seat description')
-        .populate('waiter', 'userId nick fullName')
+        .populate('user', 'userId nick fullName')
         .exec()
         .then(doc => {
             res.status(200).json(doc);
@@ -63,7 +63,7 @@ router.post('/', (req, res, next) => {
         const newReservation = new Reservation({
             _id : new mongoose.Types.ObjectId(),
             table : req.body.tableId,
-            waiter : req.body.waiterId,
+            user : req.body.userId,
             reference : response,
             guest : req.body.guest,
             paid: req.body.paid
@@ -111,7 +111,7 @@ router.get('/:id', (req, res, next) => {
     const id = req.params.id;
     Reservation.findById(id)
         .populate('table', 'seat description')
-        .populate('waiter', 'userId nick fullName')
+        .populate('user', 'userId nick fullName')
         .exec()
         .then(result => {
             console.log(result);
